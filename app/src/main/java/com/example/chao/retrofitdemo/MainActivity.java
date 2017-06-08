@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         List<GitHubClient.Contributor> contributors = response.body();
                         if(contributors!=null){
                             for (GitHubClient.Contributor contributor : contributors) {
-                                Log.i("QWC",contributor.login + " (" + contributor.contributions + ")");
+//                                Log.i("QWC",contributor.login + " (" + contributor.contributions + ")");
                             }
                         }else{
                             Log.i(TAG,"onResponse-onFailure");
