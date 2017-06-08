@@ -3,7 +3,9 @@ package com.example.chao.retrofitdemo;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.example.chao.retrofitdemo.entity.AccessToken;
 import com.example.chao.retrofitdemo.interceptor.AuthTokenInterceptor;
+import com.example.chao.retrofitdemo.interceptor.AuthenticationInterceptor;
 import com.example.chao.retrofitdemo.interceptor.CredientialInterceptor;
 
 import okhttp3.OkHttpClient;
@@ -48,9 +50,14 @@ public class ServiceGenerator {
         return createService(serviceClass);
     }
 
-//    public static <S> S createService(Class<S> serviceClass, AccessToken accessToken){
-//        if (accessToken!=null){
-//        }
-//    }
+    public static <S> S createService(Class<S> serviceClass, AccessToken accessToken){
+        if (accessToken!=null){
+            httpClient.addInterceptor(new AuthenticationInterceptor(accessToken));
+            OkHttpClient client=httpClient.build();
+            Retrofit retrofit=builder.client(client).build();
+            return retrofit.create(serviceClass);
+        }
+        return createService(serviceClass);
+    }
 
 }
