@@ -48,4 +48,9 @@ public class ServiceGenerator {
         return createService(serviceClass);
     }
 
+//    public static <S> S createService(Class<S> serviceClass, AccessToken accessToken){
+//        if (accessToken!=null){
+//        }
+//    }
+
 }
