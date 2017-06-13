@@ -2,10 +2,10 @@ package com.example.chao.retrofitdemo.service;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * @author chao
@@ -21,7 +21,7 @@ public interface GitHubClient {
     );
 
     @GET("/repos/{owner}/{repo}/contributors")
-    Observable<List<Contributor>> contributorsNew(@Path("owner") String owner,@Path("repo") String repo);
+    Observable<List<Contributor>> contributorsNew(@Path("owner") String owner, @Path("repo") String repo);
 
     static class Contributor {
         String login;

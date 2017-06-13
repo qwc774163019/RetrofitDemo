@@ -10,19 +10,19 @@ import com.example.chao.retrofitdemo.service.GitHubClient;
 
 import java.util.List;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static String TAG="QWC";
     Button btn;
     Button btn1;
+    Button btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
         btn1= (Button) findViewById(R.id.btn1);
         btn1.setOnClickListener(this);
+        btn2= (Button) findViewById(R.id.btn2);
+        btn2.setOnClickListener(this);
     }
 
     @Override
@@ -72,17 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceGenerator.createService(GitHubClient.class).contributorsNew("apis-is", "apis")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<List<GitHubClient.Contributor>>() {
+                        .subscribe(new Subscriber<List<GitHubClient.Contributor>>() {
                             @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(List<GitHubClient.Contributor> value) {
-                                for (int i=0;i<value.size();i++){
-                                    Log.i(TAG,value.get(i).getLogin()+":"+value.get(i).getContributions()+"\n");
-                                }
+                            public void onCompleted() {
+                                Log.i(TAG,"onComplete");
                             }
 
                             @Override
@@ -91,10 +86,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
 
                             @Override
-                            public void onComplete() {
-                                Log.i(TAG,"onComplete");
+                            public void onNext(List<GitHubClient.Contributor> contributors) {
+                                for (int i=0;i<contributors.size();i++){
+                                    Log.i(TAG,contributors.get(i).getLogin()+":"+contributors.get(i).getContributions()+"\n");
+                                }
                             }
                         });
+
+                break;
+            case R.id.btn2:
 
                 break;
         }
