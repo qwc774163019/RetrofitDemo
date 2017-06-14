@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.chao.retrofitdemo.service.GitHubClient;
 
@@ -13,8 +14,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -95,7 +98,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.btn2:
+                ServiceGenerator.createService(GitHubClient.class).contributorsNew("apis-is","apis")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .flatMap(new Func1<List<GitHubClient.Contributor>, Observable<GitHubClient.Contributor>>() {
+                            @Override
+                            public Observable<GitHubClient.Contributor> call(List<GitHubClient.Contributor> contributors) {
+                                return Observable.from(contributors);
 
+                            }
+                        })
+                        .subscribe(new Subscriber<GitHubClient.Contributor>() {
+                            @Override
+                            public void onCompleted() {
+//                                Log.i(TAG,"onComplete");
+                                Toast. makeText(getApplicationContext(),"onComplete",Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.i(TAG,"onError");
+                            }
+
+                            @Override
+                            public void onNext(GitHubClient.Contributor contributor) {
+                                Log.i(TAG,contributor.getLogin()+":"+contributor.getContributions());
+                            }
+                        });
                 break;
         }
     }
